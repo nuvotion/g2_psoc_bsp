@@ -4,12 +4,18 @@ module sdlc (
         input  wire clk,
         input  wire rx_data,
         input  wire rx_clk,
-        output wire rx_rdy);
+        output reg  rx_rdy);
+
+    wire dbg;
+
+    always @(posedge clk) begin
+        if (dbg == 1'b1) rx_rdy <= !rx_rdy;
+    end
 
     dpll dpll (
         .clk(clk),
         .sync_in(rx_clk),
-        .clken_out(rx_rdy)
+        .clken_out(dbg)
     );
 
 endmodule
@@ -26,22 +32,22 @@ module dpll (
     reg  clken, clken90, faster, slower;
 
     cy_psoc3_count7 #(
-        .cy_period(7'd15),
-        .cy_init_value(7'd13),
+        .cy_period(7'd14),
+        .cy_init_value(7'd14),
         .cy_alt_mode(`TRUE))
     clk_div (
         .clock(clk),
-        .reset(faster),
+        .reset(1'b0),
         .load(slower),
-        .enable(1'b1),
+        .enable(faster),
         .count(count),
         .tc(clken_out)
     );
 
     always @(posedge clk) begin
-        clken   <= (count[2:0] == 0) ? 1'b1 : 1'b0;
-        clken90 <= (count[2:0] == 4) ? 1'b1 : 1'b0;
-        faster  <= (count[3:0] == 0) ? late : 1'b0;
+        clken   <= (count[2:0] == 0) ? 1'b1  : 1'b0;
+        clken90 <= (count[2:0] == 4) ? 1'b1  : 1'b0;
+        faster  <= (count[3:0] != 2) ? 1'b1  : late;
         slower  <= (count[3:0] == 0) ? early : 1'b0;
     end
 
