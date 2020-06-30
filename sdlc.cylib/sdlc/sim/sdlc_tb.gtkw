@@ -1,0 +1,119 @@
+[*]
+[*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
+[*] Tue Jun 30 08:19:34 2020
+[*]
+[dumpfile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.fst"
+[dumpfile_mtime] "Tue Jun 30 08:18:17 2020"
+[dumpfile_size] 172791
+[savefile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.gtkw"
+[timestart] 163930
+[size] 1354 682
+[pos] -1 -1
+*-13.000000 186711 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] sdlc_tb.
+[treeopen] sdlc_tb.sdlc.
+[treeopen] sdlc_tb.sdlc.crc.
+[treeopen] sdlc_tb.sdlc.crc.crc_dp.
+[treeopen] sdlc_tb.sdlc.dpll.
+[sst_width] 291
+[signals_width] 214
+[sst_expanded] 1
+[sst_vpaned_height] 186
+@28
+sdlc_tb.rx_data
+sdlc_tb.rx_clk
+@200
+-
+-DPLL
+@28
+sdlc_tb.sdlc.dpll.sync_in
+sdlc_tb.sdlc.dpll.sync_out
+@200
+-
+-Oversample
+@28
+sdlc_tb.sdlc.rx_os
+sdlc_tb.sdlc.rx_clk_sync
+@200
+-
+-CRC
+@28
+sdlc_tb.sdlc.crc.reset
+sdlc_tb.sdlc.crc.si
+@200
+-
+@28
+sdlc_tb.sdlc.crc.crc_dp.U1.cs_addr[2:0]
+@22
+sdlc_tb.sdlc.crc.crc_dp.U1.reg_a0[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.reg_a0[7:0]
+@28
+sdlc_tb.sdlc.crc.crc_dp.U0.fb_enable
+sdlc_tb.sdlc.crc.crc_dp.U1.fb_enable
+@22
+sdlc_tb.sdlc.crc.crc_dp.U1.srcA[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.srcA[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U1.srcB[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.srcB[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U1.dri[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.dri[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U1.mask_out[7:0]
+@23
+sdlc_tb.sdlc.crc.crc_dp.U0.mask_out[7:0]
+@c00028
+sdlc_tb.sdlc.crc.so[1:0]
+@28
+(0)sdlc_tb.sdlc.crc.so[1:0]
+(1)sdlc_tb.sdlc.crc.so[1:0]
+@1401200
+-group_end
+@200
+-
+-Shift register
+@28
+sdlc_tb.sdlc.crc.dp_cs_addr[2:0]
+sdlc_tb.sdlc.crc.reset
+sdlc_tb.sdlc.crc.data_en_d
+sdlc_tb.sdlc.crc.data_in_d
+sdlc_tb.sdlc.crc.crc_dp.U1.route_si
+sdlc_tb.sdlc.crc.crc_dp.U1.sri
+@22
+sdlc_tb.sdlc.crc.crc_dp.U1.reg_a1[7:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.reg_a1[7:0]
+@28
+sdlc_tb.sdlc.crc.data_latch
+@22
+sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.fifo_wr_data[7:0]
+@28
+sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.fifo_wr_enable
+sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.wr_pointer[1:0]
+sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.rd_pointer[1:0]
+@200
+-
+-RX Control
+@28
+sdlc_tb.sdlc.rx_ctrl.sync
+@22
+sdlc_tb.sdlc.rx_ctrl.rx_bit_count[3:0]
+@28
+sdlc_tb.sdlc.rx_ctrl.latch
+@200
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+[pattern_trace] 1
+[pattern_trace] 0

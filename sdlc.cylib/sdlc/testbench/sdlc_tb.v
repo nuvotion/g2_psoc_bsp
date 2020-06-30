@@ -15,10 +15,19 @@ module sdlc_tb();
 
     always #CLK_PERIOD clk <= !clk;
 
+    always @(clk) sdlc.crc.crc_dp.U1.cpu_clock <= clk;
+    always @(clk) sdlc.crc.crc_dp.U0.cpu_clock <= clk;
+
     initial begin
-        sdlc.dpll.clk_div.actl <= 1'b0;
-        #7800
-        sdlc.dpll.clk_div.actl <= 1'b1;
+        /* Write polynomial */
+        sdlc.crc.crc_dp.U1.d0_write(8'h08);
+        sdlc.crc.crc_dp.U0.d0_write(8'h10);
+
+        /* Reset seed - just for sim - not needed in HW */
+        sdlc.crc.crc_dp.U1.a0_write(8'h00);
+        sdlc.crc.crc_dp.U0.a0_write(8'h00);
+
+        sdlc.dpll.dco.actl <= 1'b1;
     end
 
     reg clk;

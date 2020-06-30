@@ -25,9 +25,12 @@ int main(void) {
     CyGlobalIntEnable;
 
 #define SDLC_DPLL_CONTROL_REG \
-	    (*(reg8 *) sdlc_1_dpll_clk_div__CONTROL_AUX_CTL_REG)
+	    (*(reg8 *) sdlc_1_dpll_dco__CONTROL_AUX_CTL_REG)
 
     SDLC_DPLL_CONTROL_REG = 0x20;
+
+    LED_0_Write(1);
+    LED_1_Write(1);
 
     for(;;) {
         usb_poll();
