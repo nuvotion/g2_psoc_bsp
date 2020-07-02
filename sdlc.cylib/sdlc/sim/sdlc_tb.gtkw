@@ -1,22 +1,23 @@
 [*]
 [*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
-[*] Tue Jun 30 08:19:34 2020
+[*] Thu Jul  2 12:55:02 2020
 [*]
 [dumpfile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.fst"
-[dumpfile_mtime] "Tue Jun 30 08:18:17 2020"
-[dumpfile_size] 172791
+[dumpfile_mtime] "Thu Jul  2 12:52:32 2020"
+[dumpfile_size] 84928
 [savefile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.gtkw"
-[timestart] 163930
+[timestart] 78210
 [size] 1354 682
 [pos] -1 -1
-*-13.000000 186711 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-12.000000 91050 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] sdlc_tb.
-[treeopen] sdlc_tb.sdlc.
-[treeopen] sdlc_tb.sdlc.crc.
-[treeopen] sdlc_tb.sdlc.crc.crc_dp.
-[treeopen] sdlc_tb.sdlc.dpll.
+[treeopen] sdlc_tb.sdlc_tx.
+[treeopen] sdlc_tb.sdlc_tx.sdlc_dp.dp.
+[treeopen] sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.
+[treeopen] sdlc_tb.sdlc_tx.tx_ctrl.
+[treeopen] sdlc_tb.sdlc_tx.tx_ctrl.dp.
 [sst_width] 291
-[signals_width] 214
+[signals_width] 238
 [sst_expanded] 1
 [sst_vpaned_height] 186
 @28
@@ -24,88 +25,107 @@ sdlc_tb.rx_data
 sdlc_tb.rx_clk
 @200
 -
--DPLL
+-Transmit
 @28
-sdlc_tb.sdlc.dpll.sync_in
-sdlc_tb.sdlc.dpll.sync_out
-@200
--
--Oversample
-@28
-sdlc_tb.sdlc.rx_os
-sdlc_tb.sdlc.rx_clk_sync
-@200
--
--CRC
-@28
-sdlc_tb.sdlc.crc.reset
-sdlc_tb.sdlc.crc.si
-@200
--
-@28
-sdlc_tb.sdlc.crc.crc_dp.U1.cs_addr[2:0]
+sdlc_tb.sdlc_tx.dpll_clk_sync
+sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.f1_blk_stat
+sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.z1
+sdlc_tb.sdlc_tx.tx_ctrl.z0
 @22
-sdlc_tb.sdlc.crc.crc_dp.U1.reg_a0[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.reg_a0[7:0]
+sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.reg_a1[7:0]
+@24
+sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.reg_a0[7:0]
+@200
+-
 @28
-sdlc_tb.sdlc.crc.crc_dp.U0.fb_enable
-sdlc_tb.sdlc.crc.crc_dp.U1.fb_enable
-@22
-sdlc_tb.sdlc.crc.crc_dp.U1.srcA[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.srcA[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U1.srcB[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.srcB[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U1.dri[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.dri[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U1.mask_out[7:0]
-@23
-sdlc_tb.sdlc.crc.crc_dp.U0.mask_out[7:0]
+sdlc_tb.sdlc_tx.tx_ctrl.state[1:0]
+sdlc_tb.sdlc_tx.tx_ctrl.tx_sync
+sdlc_tb.sdlc_tx.tx_ctrl.tx_crc
+sdlc_tb.sdlc_tx.tx_ctrl.tx_crc_rst
+@200
+-
+-TX Datapath
+@28
+sdlc_tb.sdlc_tx.sdlc_dp.data_en
+sdlc_tb.sdlc_tx.sdlc_dp.tx_drq
+sdlc_tb.sdlc_tx.tx_ctrl.tx_crc_rst
+sdlc_tb.sdlc_tx.sdlc_dp.reset
+sdlc_tb.sdlc_tx.sdlc_dp.tx_crc
+sdlc_tb.sdlc_tx.sdlc_dp.bit_count.tc
+sdlc_tb.sdlc_tx.sdlc_dp.data_en
 @c00028
-sdlc_tb.sdlc.crc.so[1:0]
+sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
 @28
-(0)sdlc_tb.sdlc.crc.so[1:0]
-(1)sdlc_tb.sdlc.crc.so[1:0]
+(0)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
+(1)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
+(2)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
 @1401200
 -group_end
+@c00022
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+@28
+(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+@1401200
+-group_end
+@c00022
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+@28
+(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+@1401200
+-group_end
+@22
+sdlc_tb.sdlc_tx.sdlc_dp.bit_count.count[6:0]
 @200
 -
--Shift register
+@c00022
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
 @28
-sdlc_tb.sdlc.crc.dp_cs_addr[2:0]
-sdlc_tb.sdlc.crc.reset
-sdlc_tb.sdlc.crc.data_en_d
-sdlc_tb.sdlc.crc.data_in_d
-sdlc_tb.sdlc.crc.crc_dp.U1.route_si
-sdlc_tb.sdlc.crc.crc_dp.U1.sri
+(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
+@1401200
+-group_end
 @22
-sdlc_tb.sdlc.crc.crc_dp.U1.reg_a1[7:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.reg_a1[7:0]
-@28
-sdlc_tb.sdlc.crc.data_latch
-@22
-sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.fifo_wr_data[7:0]
-@28
-sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.fifo_wr_enable
-sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.wr_pointer[1:0]
-sdlc_tb.sdlc.crc.crc_dp.U0.FIFO0.rd_pointer[1:0]
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a0[7:0]
 @200
 -
--RX Control
 @28
-sdlc_tb.sdlc.rx_ctrl.sync
-@22
-sdlc_tb.sdlc.rx_ctrl.rx_bit_count[3:0]
-@28
-sdlc_tb.sdlc.rx_ctrl.latch
+sdlc_tb.sdlc_tx.dpll_clk_sync
+sdlc_tb.sdlc_tx.sdlc_dp_din
+sdlc_tb.sdlc_tx.tx_ctrl.tx_sync
+sdlc_tb.sdlc_tx.tx_data
+sdlc_tb.sdlc_tx.sdlc_dp.data_in
+sdlc_tb.sdlc_tx.sdlc_dp.si
+sdlc_tb.sdlc_tx.sdlc_dp.ci
 @200
 -
--
--
--
--
--
--
--
+@29
+sdlc_tb.sdlc_tx.tx_ctrl.cs_addr[1:0]
+@28
+sdlc_tb.sdlc_tx.tx_state[1:0]
+sdlc_tb.sdlc_tx.dpll_clk_sync
+sdlc_tb.sdlc_tx.tx_sync
+sdlc_tb.sdlc_tx.tx_data
+@200
 -
 -
 -
