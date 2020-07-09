@@ -1,131 +1,142 @@
 [*]
 [*] GTKWave Analyzer v3.3.68 (w)1999-2016 BSI
-[*] Thu Jul  2 12:55:02 2020
+[*] Sun Jul  5 13:32:41 2020
 [*]
 [dumpfile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.fst"
-[dumpfile_mtime] "Thu Jul  2 12:52:32 2020"
-[dumpfile_size] 84928
+[dumpfile_mtime] "Sun Jul  5 13:29:11 2020"
+[dumpfile_size] 103902
 [savefile] "/home/kmtaylor/src/control_planner/sdlc.cylib/sdlc/sim/sdlc_tb.gtkw"
-[timestart] 78210
+[timestart] 67810
 [size] 1354 682
 [pos] -1 -1
-*-12.000000 91050 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-14.000000 22974 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] sdlc_tb.
-[treeopen] sdlc_tb.sdlc_tx.
+[treeopen] sdlc_tb.sdlc_rx.oversample.dp.
+[treeopen] sdlc_tb.sdlc_rx.sdlc_dp.dp.
+[treeopen] sdlc_tb.sdlc_rx.tx_ctrl.dp.
+[treeopen] sdlc_tb.sdlc_rx.tx_ctrl.dp.U0.
 [treeopen] sdlc_tb.sdlc_tx.sdlc_dp.dp.
-[treeopen] sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.
 [treeopen] sdlc_tb.sdlc_tx.tx_ctrl.
-[treeopen] sdlc_tb.sdlc_tx.tx_ctrl.dp.
 [sst_width] 291
-[signals_width] 238
+[signals_width] 326
 [sst_expanded] 1
 [sst_vpaned_height] 186
-@28
-sdlc_tb.rx_data
-sdlc_tb.rx_clk
 @200
--
 -Transmit
 @28
-sdlc_tb.sdlc_tx.dpll_clk_sync
+sdlc_tb.sdlc_tx.tx_ctrl.state[1:0]
+sdlc_tb.sdlc_tx.tx_ctrl.clk
 sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.f1_blk_stat
 sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.z1
 sdlc_tb.sdlc_tx.tx_ctrl.z0
+sdlc_tb.sdlc_tx.tx_ctrl.data_en
 @22
 sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.reg_a1[7:0]
 @24
 sdlc_tb.sdlc_tx.tx_ctrl.dp.U0.reg_a0[7:0]
 @200
 -
-@28
-sdlc_tb.sdlc_tx.tx_ctrl.state[1:0]
-sdlc_tb.sdlc_tx.tx_ctrl.tx_sync
-sdlc_tb.sdlc_tx.tx_ctrl.tx_crc
-sdlc_tb.sdlc_tx.tx_ctrl.tx_crc_rst
-@200
--
 -TX Datapath
 @28
-sdlc_tb.sdlc_tx.sdlc_dp.data_en
-sdlc_tb.sdlc_tx.sdlc_dp.tx_drq
-sdlc_tb.sdlc_tx.tx_ctrl.tx_crc_rst
-sdlc_tb.sdlc_tx.sdlc_dp.reset
-sdlc_tb.sdlc_tx.sdlc_dp.tx_crc
-sdlc_tb.sdlc_tx.sdlc_dp.bit_count.tc
-sdlc_tb.sdlc_tx.sdlc_dp.data_en
-@c00028
-sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
-@28
-(0)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
-(1)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
-(2)sdlc_tb.sdlc_tx.sdlc_dp.dp_cs_addr[2:0]
-@1401200
--group_end
-@c00022
-sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-@28
-(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
-@1401200
--group_end
-@c00022
-sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-@28
-(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
-@1401200
--group_end
-@22
-sdlc_tb.sdlc_tx.sdlc_dp.bit_count.count[6:0]
+sdlc_tb.sdlc_tx.tx_data
+sdlc_tb.sdlc_tx.sdlc_dp.clk
+(1)sdlc_tb.sdlc_tx.sdlc_dp.clken[3:0]
+sdlc_tb.sdlc_tx.sdlc_dp.out_clk
+sdlc_tb.sdlc_tx.tx_clk
 @200
 -
-@c00022
-sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
 @28
-(0)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(1)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(2)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(3)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(4)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(5)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(6)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-(7)sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
-@1401200
--group_end
+sdlc_tb.sdlc_tx.sdlc_dp.tx_start
+sdlc_tb.sdlc_tx.sdlc_dp.tx_state_sync
+sdlc_tb.sdlc_tx.sdlc_dp.tx_state_crc
 @22
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a1[7:0]
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a1[7:0]
+@200
+-
+@22
+sdlc_tb.sdlc_tx.sdlc_dp.dp.U1.reg_a0[7:0]
 sdlc_tb.sdlc_tx.sdlc_dp.dp.U0.reg_a0[7:0]
 @200
 -
+-RX Clock recovery
 @28
-sdlc_tb.sdlc_tx.dpll_clk_sync
-sdlc_tb.sdlc_tx.sdlc_dp_din
-sdlc_tb.sdlc_tx.tx_ctrl.tx_sync
-sdlc_tb.sdlc_tx.tx_data
-sdlc_tb.sdlc_tx.sdlc_dp.data_in
-sdlc_tb.sdlc_tx.sdlc_dp.si
-sdlc_tb.sdlc_tx.sdlc_dp.ci
+sdlc_tb.sdlc_rx.rx_clk_gated
+sdlc_tb.sdlc_rx.rx_os
+sdlc_tb.sdlc_rx.oversample.data_in
+sdlc_tb.sdlc_rx.oversample.sync_in
 @200
 -
-@29
-sdlc_tb.sdlc_tx.tx_ctrl.cs_addr[1:0]
+-RX datapath
+@22
+sdlc_tb.sdlc_rx.tx_ctrl.dp.U0.reg_a0[7:0]
 @28
-sdlc_tb.sdlc_tx.tx_state[1:0]
-sdlc_tb.sdlc_tx.dpll_clk_sync
-sdlc_tb.sdlc_tx.tx_sync
-sdlc_tb.sdlc_tx.tx_data
+sdlc_tb.sdlc_rx.sdlc_dp.pkt_sync
+sdlc_tb.sdlc_rx.sdlc_dp.dp_clk_en
+sdlc_tb.sdlc_rx.sdlc_dp.dp_cs_addr[1:0]
+sdlc_tb.sdlc_rx.sdlc_dp.si
+sdlc_tb.sdlc_rx.sdlc_dp.ci
+@22
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a0[7:0]
+@c00022
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+@28
+(0)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(1)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(2)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(3)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(4)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(5)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(6)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+(7)sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a0[7:0]
+@1401200
+-group_end
+@c00022
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+@28
+(0)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(1)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(2)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(3)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(4)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(5)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(6)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+(7)sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.reg_a1[7:0]
+@1401200
+-group_end
+@22
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.reg_a1[7:0]
+@28
+sdlc_tb.sdlc_rx.sdlc_dp.bit_tc
+@22
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U1.fifo0_data_in[7:0]
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.fifo0_data_in[7:0]
+@29
+sdlc_tb.sdlc_rx.rx_valid
+@28
+sdlc_tb.sdlc_rx.rx_drq
+sdlc_tb.sdlc_rx.sdlc_dp.dp.U0.fifo0_wr_en
+@22
+sdlc_tb.cpu_rd_data[15:0]
 @200
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
+-
 -
 -
 -
