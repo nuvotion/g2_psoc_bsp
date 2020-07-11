@@ -335,10 +335,10 @@ module sdlc_dp (
     assign dbg[4] = dp_cs_addr[0]; 
     assign dbg[5] = dp_cs_addr[1]; 
     assign dbg[6] = f1_bus_stat[1]; 
-    assign dbg[7] = pkt_sync; 
+    assign dbg[7] = tx_drq; 
 
     assign tx_zero_ins  = zero_ins;
-    assign tx_drq       = sdlc_dir & f1_bus_stat[1];
+    assign tx_drq       = sdlc_dir & f1_bus_stat[1] & bit_tc;
     assign rx_valid     = ce1[1];
     assign rx_drq       = f0_bus_stat[1];
 

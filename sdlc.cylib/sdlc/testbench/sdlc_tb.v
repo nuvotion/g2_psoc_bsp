@@ -106,10 +106,10 @@ module sdlc_tb();
 
         sdlc_tx.sdlc_dp.dp.U1.fifo1_write(8'h00);
         sdlc_tx.sdlc_dp.dp.U0.fifo1_write(8'h15);
-        sdlc_tx.sdlc_dp.dp.U1.fifo1_write(8'h00);
+        sdlc_tx.sdlc_dp.dp.U1.fifo1_write(8'h1B);
         sdlc_tx.sdlc_dp.dp.U0.fifo1_write(8'h00);
         sdlc_tx.sdlc_dp.dp.U1.fifo1_write(8'h00);
-        sdlc_tx.sdlc_dp.dp.U0.fifo1_write(8'h00);
+        sdlc_tx.sdlc_dp.dp.U0.fifo1_write(8'h85);
         sdlc_tx.sdlc_dp.dp.U1.fifo1_write(8'hFF);
         sdlc_tx.sdlc_dp.dp.U0.fifo1_write(8'h00);
 
