@@ -324,6 +324,7 @@ module sdlc_dp (
     reg         dp_din;
     wire        so_lsb;
     wire        bit_tc;
+    wire        check_crc;
     wire        zero_ins;
     wire        pkt_sync;
     reg   [1:0] dp_cs_addr;
@@ -336,11 +337,21 @@ module sdlc_dp (
     assign dbg[5] = dp_cs_addr[1]; 
     assign dbg[6] = f1_bus_stat[1]; 
     assign dbg[7] = tx_drq; 
+    /*
+    assign dbg[0] = clken[2]; 
+    assign dbg[1] = dp_din; 
+    assign dbg[2] = pkt_sync; 
+    assign dbg[3] = f0_bus_stat[1]; 
+    assign dbg[4] = rx_valid; 
+    assign dbg[5] = rx_drq;
+    assign dbg[6] = f0_load; 
+    assign dbg[7] = 1'b0; 
+    */
 
     assign tx_zero_ins  = zero_ins;
     assign tx_drq       = sdlc_dir & f1_bus_stat[1] & bit_tc;
-    assign rx_valid     = ce1[1];
-    assign rx_drq       = f0_bus_stat[1];
+    assign rx_valid     = check_crc & ~sdlc_dir & ce1[1] & clken[2];
+    assign rx_drq       = f0_bus_stat[1] & clken[3];
 
     cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
     clk_sync_1 (
@@ -477,11 +488,11 @@ module sdlc_dp (
                          (~sdlc_dir & pkt_sync);
     end
 
-    always @(posedge clk) dp_din  <= sdlc_dir ? so_lsb : rx_data;
+    always @(posedge clk) dp_din <= sdlc_dir ? so_lsb : rx_data;
 
     assign si       = (cmsb[1] & ~clken[1]) ^ dp_din;
-    assign ci       = ~(tx_state_crc & sdlc_dir) & (~cmsb[1] ^ (dp_din));
-    assign f0_load  = bit_tc & clken[2];
+    assign ci       = ~(tx_state_crc & sdlc_dir) & (~cmsb[1] ^ dp_din);
+    assign f0_load  = ~sdlc_dir & bit_tc & clken[2];
 
     cy_psoc3_dp16 #(
         .cy_dpconfig_a(dpconfig0), .cy_dpconfig_b(dpconfig1))
@@ -506,15 +517,16 @@ module sdlc_dp (
     generate
         if (sim) begin
             reg so_lsb_d;
-            always @(negedge clk) so_lsb_d  <= so[0];
-            assign so_lsb   = so_lsb_d;
+            always @(negedge clk) so_lsb_d <= so[0];
+            assign so_lsb = so_lsb_d;
         end else begin
-            assign so_lsb   = so[0];
+            assign so_lsb = so[0];
         end
     endgenerate
 
     /* -------- Byte marker ------------------------------------------- */
-    wire bit_cnt_en = ~zero_ins & clken[2];
+    wire        bit_cnt_en = ~zero_ins & clken[2];
+    wire  [6:0] bit_cnt;
 
     cy_psoc3_count7 #(
         .cy_period(7'd15),
@@ -524,13 +536,15 @@ module sdlc_dp (
         .reset(1'b0),
         .load(pkt_sync),
         .enable(bit_cnt_en),
+        .count(bit_cnt),
         .tc(bit_tc)
     );
 
+    assign check_crc = (bit_cnt[2:0] == 7);
 
     /* -------- Zero insertion ---------------------------------------- */
-    wire        zero_ins_cnt_rst = sdlc_dir ? ~tx_out : ~dp_din;
-    wire        zero_ins_cnt_en  = sdlc_dir ? clken[3] : clken[2];
+    wire        zero_ins_cnt_rst = sdlc_dir ? ~tx_out  : (~dp_din & clken[2]);
+    wire        zero_ins_cnt_en  = sdlc_dir ? clken[3] : ( dp_din & clken[2]);
     wire  [6:0] zero_ins_cnt;
 
     cy_psoc3_count7 #(
@@ -579,6 +593,7 @@ module sdlc (
     wire  [7:0] dbg_int;
 
     assign dbg = {dbg_int[7:1], tx_clk};
+    //assign dbg = {rx_clk, dbg_int[6:0]};
 
     assign rx_clk_gated = rx_clk & ~sdlc_dir;
     assign dpll_sync    = {dpll_sync_out_d, dpll_sync_out};

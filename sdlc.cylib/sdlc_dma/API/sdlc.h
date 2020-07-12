@@ -22,9 +22,10 @@
 #define `$INSTANCE_NAME`_TX_PREAMBLE_REG \
     (*(reg8  *) `$INSTANCE_NAME`_B_SDLC_tx_ctrl_dp_u0__F1_REG)
 
+#define `$INSTANCE_NAME`_RX_DATA_REG \
+    `$INSTANCE_NAME`_B_SDLC_sdlc_dp_dp_u0__16BIT_F0_REG
 #define `$INSTANCE_NAME`_TX_DATA_REG \
     `$INSTANCE_NAME`_B_SDLC_sdlc_dp_dp_u0__16BIT_F1_REG
 
-
 void `$INSTANCE_NAME`_Setup(void);
-void `$INSTANCE_NAME`_Send(uint8 len, uint8 *data);
+void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, uint8 *rx_data);

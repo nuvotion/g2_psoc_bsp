@@ -251,24 +251,24 @@
   <Data key="DataVersionKey" value="2" />
   <Group key="DWRInstGuidMapping">
     <Group key="Pin">
-      <Data key="0be7953b-5104-4da9-b7ae-1a5911660679" value="RX_DATA" />
+      <Data key="0be7953b-5104-4da9-b7ae-1a5911660679" value="SDLC_RX_DATA" />
       <Data key="2e8e41ca-1ed8-4ef0-831d-8c38d6c3fb2b" value="SDLC_TX_CLK_EN" />
-      <Data key="3b84a12d-5f2c-4b91-be0d-7aae0abeb0a6" value="TX_DATA" />
+      <Data key="3b84a12d-5f2c-4b91-be0d-7aae0abeb0a6" value="DBG2" />
       <Data key="5ae00897-7d8b-4715-a328-641f6f5935dd" value="SDLC_TX_CLK" />
       <Data key="7ef65d3e-fe83-4a42-b6c8-9a06c81b4183" value="SDLC_TX_DATA" />
-      <Data key="8a682f71-60be-4b32-99e5-a821d21cbb3b" value="TX_CLK" />
-      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="RX_CLK" />
-      <Data key="8f97acb8-1d0e-4a6e-8202-77dffafdb249" value="RX_DRQ" />
+      <Data key="8a682f71-60be-4b32-99e5-a821d21cbb3b" value="DBG1" />
+      <Data key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba" value="SDLC_RX_CLK" />
+      <Data key="8f97acb8-1d0e-4a6e-8202-77dffafdb249" value="DBG5" />
       <Data key="34d5eb3c-ba57-4469-8818-542793b0495a" value="SDLC_TX_DATA_EN" />
-      <Data key="69c281dc-81ff-4fed-a8d4-c1172d0fc5d8" value="RX_DRQ_1" />
-      <Data key="292fe4ea-b6fc-47e8-b629-1662916f06a3" value="TX_DRQ" />
+      <Data key="69c281dc-81ff-4fed-a8d4-c1172d0fc5d8" value="DBG6" />
+      <Data key="292fe4ea-b6fc-47e8-b629-1662916f06a3" value="DBG3" />
       <Data key="626bde54-29a6-4fc7-9d88-b951ddf659e3" value="LED_1" />
-      <Data key="4689a416-e97e-4399-8b5e-9fde538f6bd8" value="RX_DRQ_2" />
+      <Data key="4689a416-e97e-4399-8b5e-9fde538f6bd8" value="DBG7" />
       <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/8b77a6c4-10a0-4390-971c-672353e2a49c" value="USBFS_Dm" />
       <Data key="beca5e2d-f70f-4900-a4db-7eca1ed3126e/618a72fc-5ddd-4df5-958f-a3d55102db42" value="USBFS_Dp" />
-      <Data key="dad49bca-6d3c-4c2b-a228-cfda9c994207" value="RX_VALID" />
+      <Data key="dad49bca-6d3c-4c2b-a228-cfda9c994207" value="DBG4" />
       <Data key="e6c1a0e5-6b91-4212-abab-4d312becbf57" value="LED_0" />
-      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="SDLC_DIR" />
+      <Data key="e851a3b9-efb8-48be-bbb8-b303b216c393" value="DBG0" />
     </Group>
   </Group>
   <Group key="EEPROM">
@@ -3357,7 +3357,7 @@
   <Group key="Pin2">
     <Group key="0be7953b-5104-4da9-b7ae-1a5911660679">
       <Group key="0">
-        <Data key="Port Format" value="0,6" />
+        <Data key="Port Format" value="5,5" />
       </Group>
     </Group>
     <Group key="2e8e41ca-1ed8-4ef0-831d-8c38d6c3fb2b">
@@ -3387,7 +3387,7 @@
     </Group>
     <Group key="8d318d8b-cf7b-4b6b-b02c-ab1c5c49d0ba">
       <Group key="0">
-        <Data key="Port Format" value="0,5" />
+        <Data key="Port Format" value="12,6" />
       </Group>
     </Group>
     <Group key="8f97acb8-1d0e-4a6e-8202-77dffafdb249">
