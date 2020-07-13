@@ -28,7 +28,8 @@ module dpll (
         input  wire clk,
         input  wire sync_in,
         output wire sync_out,
-        output reg  clk_out);
+        output reg  clk_out,
+        output wire cd_out);
 
     parameter sim = `FALSE;
 
@@ -54,7 +55,7 @@ module dpll (
         clken       <= (count[2:0] == 0);
         clken90     <= (count[2:0] == 4);
         if      (count[3:0] == 2)   dco_en  <= late;
-        else if (count[3:0] == 0)   dco_en  <= !early;
+        else if (count[3:0] == 0)   dco_en  <= ~early;
         else                        dco_en  <= 1'b1;
         if      (count[3:0] == 5)   clk_out <= 1'b1;
         else if (count[3:0] == 13)  clk_out <= 1'b0;
@@ -91,55 +92,60 @@ module dpll (
     end
 
     /* Edge detection */
-    assign late =   (!dff2_q &&  dff1_q &&  dff4_q);
-    assign early =  (!dff2_q &&  dff1_q && !dff4_q) ||
-                    ( dff2_q && !dff1_q);
+    assign late =   (~dff2_q &  dff1_q &  dff4_q);
+    assign early =  (~dff2_q &  dff1_q & ~dff4_q) |
+                    ( dff2_q & ~dff1_q);
+
+    assign cd_out = dff1_q & ~dff2_q;
 
 endmodule
 
 module oversample (
-        input  wire clk,
-        input  wire sync_in,
-        input  wire data_in,
-        output wire data_out);
+        input  wire         clk,
+        input  wire   [1:0] sync_in,
+        input  wire         data_in,
+        input  wire         cd_in,
+        output wire         data_out,
+        output wire         cd_out);
 
     parameter dpconfig0 = {
-        `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0,
-        `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
+        `CS_ALU_OP__INC, `CS_SRCA_A1, `CS_SRCB_D0,
+        `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC__ALU,
         `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG0: Idle */
-        `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0,
-        `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC_NONE,
+        `CS_CMP_SEL_CFGA, /* CS_REG0: Inc A1  ( A1 <= A1 + 1 ) */
+        `CS_ALU_OP__DEC, `CS_SRCA_A1, `CS_SRCB_D0,
+        `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC__ALU,
         `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG1: Preload Period (A0 <= D0) */
+        `CS_CMP_SEL_CFGA, /* CS_REG1: Dec A1  ( A1 <= A1 - 1 ) */
+        `CS_ALU_OP__XOR, `CS_SRCA_A1, `CS_SRCB_A1,
+        `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC__ALU,
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG2: Reset A1 (A1 <= 0) */
+        `CS_ALU_OP__XOR, `CS_SRCA_A1, `CS_SRCB_A1,
+        `CS_SHFT_OP_PASS, `CS_A0_SRC_NONE, `CS_A1_SRC__ALU,
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG3: Reset A1 (A1 <= 0) */
+
         `CS_ALU_OP__INC, `CS_SRCA_A0, `CS_SRCB_D0,
         `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG2: Inc A0  ( A0 <= A0 + 1 ) */
-        `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0,
-        `CS_SHFT_OP_PASS, `CS_A0_SRC___D0, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG3: Preload Period (A0 <= D0) */
-        `CS_ALU_OP_PASS, `CS_SRCA_A0, `CS_SRCB_D0,
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGB, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG4: Dec A0  ( A0 <= A0 + 1 ) */
+        `CS_ALU_OP__INC, `CS_SRCA_A0, `CS_SRCB_D0,
         `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG4: Idle */
-        `CS_ALU_OP__XOR, `CS_SRCA_A0, `CS_SRCB_A0,
-        `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG5: Preload Period (A0 <= 0) */
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGB, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG5: Dec A0  ( A0 <= A0 + 1 ) */
         `CS_ALU_OP__DEC, `CS_SRCA_A0, `CS_SRCB_D0,
         `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG6: Dec A0  ( A0 <= A0 - 1 ) */
-        `CS_ALU_OP__XOR, `CS_SRCA_A0, `CS_SRCB_A0,
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGB, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG6: Inc A0  ( A0 <= A0 - 1 ) */
+        `CS_ALU_OP__DEC, `CS_SRCA_A0, `CS_SRCB_D0,
         `CS_SHFT_OP_PASS, `CS_A0_SRC__ALU, `CS_A1_SRC_NONE,
-        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGA, `CS_SI_SEL_CFGA,
-        `CS_CMP_SEL_CFGA, /* CS_REG7: Preload Period (A0 <= 0) */
+        `CS_FEEDBACK_DSBL, `CS_CI_SEL_CFGB, `CS_SI_SEL_CFGA,
+        `CS_CMP_SEL_CFGA, /* CS_REG7: Inc A0  ( A0 <= A0 - 1 ) */
 
          8'hFF, 8'h00, /* SC_REG4: */
          8'hFF, 8'hFF, /* SC_REG5: */
-        `SC_CMPB_A0_D1, `SC_CMPA_A0_D1, `SC_CI_B_ARITH,
+        `SC_CMPB_A0_D1, `SC_CMPA_A0_D1, `SC_CI_B_ROUTE,
         `SC_CI_A_ARITH, `SC_C1_MASK_DSBL, `SC_C0_MASK_DSBL,
         `SC_A_MASK_DSBL, `SC_DEF_SI_0, `SC_SI_B_DEFSI,
         `SC_SI_A_DEFSI, /* SC_REG6: */
@@ -153,16 +159,24 @@ module oversample (
         `SC_WRK16CAT_DSBL /* SC_REG8: */
     };
 
+    wire ce1, z0;
+
+    wire cs_addr  = sync_in[0] | (sync_in[1] & cd_in);
+    wire route_ci = cd_in ? z0 : ~ce1;
+
     cy_psoc3_dp8 #(.cy_dpconfig_a(dpconfig0))
     dp (
         .clk(clk),
-        .cs_addr({data_in, 1'b1, sync_in}),
+        .cs_addr({sync_in[1], cs_addr, data_in}),
         .route_si(1'b0),
-        .route_ci(1'b0),
+        .route_ci(route_ci),
         .f0_load(1'b0),
         .f1_load(1'b0),
         .d0_load(1'b0),
         .d1_load(1'b0),
+        .cl0(cd_out),
+        .ce1(ce1),
+        .z0(z0),
         .cmsb(data_out)
     );
 
@@ -310,6 +324,7 @@ module sdlc_dp (
         output wire         tx_zero_ins,
         output reg          tx_out,
         output wire         tx_drq,
+        input  wire         rx_cd,
         input  wire         rx_data,
         output wire         rx_valid,
         output wire         rx_drq,
@@ -329,6 +344,7 @@ module sdlc_dp (
     wire        pkt_sync;
     reg   [1:0] dp_cs_addr;
 
+    /*
     assign dbg[0] = clk; 
     assign dbg[1] = tx_out; 
     assign dbg[2] = zero_ins; 
@@ -337,20 +353,19 @@ module sdlc_dp (
     assign dbg[5] = dp_cs_addr[1]; 
     assign dbg[6] = f1_bus_stat[1]; 
     assign dbg[7] = tx_drq; 
-    /*
+    */
     assign dbg[0] = clken[2]; 
     assign dbg[1] = dp_din; 
     assign dbg[2] = pkt_sync; 
     assign dbg[3] = f0_bus_stat[1]; 
-    assign dbg[4] = rx_valid; 
+    assign dbg[4] = rx_cd; 
     assign dbg[5] = rx_drq;
     assign dbg[6] = f0_load; 
     assign dbg[7] = 1'b0; 
-    */
 
     assign tx_zero_ins  = zero_ins;
     assign tx_drq       = sdlc_dir & f1_bus_stat[1] & bit_tc;
-    assign rx_valid     = check_crc & ~sdlc_dir & ce1[1] & clken[2];
+    assign rx_valid     = check_crc & ~sdlc_dir & ce1[1] & clken[2] & rx_cd;
     assign rx_drq       = f0_bus_stat[1] & clken[3];
 
     cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
@@ -492,7 +507,7 @@ module sdlc_dp (
 
     assign si       = (cmsb[1] & ~clken[1]) ^ dp_din;
     assign ci       = ~(tx_state_crc & sdlc_dir) & (~cmsb[1] ^ dp_din);
-    assign f0_load  = ~sdlc_dir & bit_tc & clken[2];
+    assign f0_load  = ~sdlc_dir & bit_tc & clken[2] & rx_cd;
 
     cy_psoc3_dp16 #(
         .cy_dpconfig_a(dpconfig0), .cy_dpconfig_b(dpconfig1))
@@ -589,11 +604,13 @@ module sdlc (
     wire        tx_sync_data;
 
     wire        rx_os;
+    wire        rx_cd;
+    wire        rx_cd_filt;
 
     wire  [7:0] dbg_int;
 
-    assign dbg = {dbg_int[7:1], tx_clk};
-    //assign dbg = {rx_clk, dbg_int[6:0]};
+    //assign dbg = {dbg_int[7:1], tx_clk};
+    assign dbg = {rx_clk, dbg_int[6:0]};
 
     assign rx_clk_gated = rx_clk & ~sdlc_dir;
     assign dpll_sync    = {dpll_sync_out_d, dpll_sync_out};
@@ -602,7 +619,8 @@ module sdlc (
         .clk(clk),
         .sync_in(rx_clk_gated),
         .sync_out(dpll_sync_out),
-        .clk_out(tx_clk)
+        .clk_out(tx_clk),
+        .cd_out(rx_cd)
     );
 
     always @(posedge clk) begin
@@ -622,6 +640,7 @@ module sdlc (
         .tx_zero_ins(tx_zero_ins),
         .tx_out(tx_data),
         .tx_drq(tx_drq),
+        .rx_cd(rx_cd_filt),
         .rx_data(rx_os),
         .rx_valid(rx_valid),
         .rx_drq(rx_drq),
@@ -641,9 +660,11 @@ module sdlc (
 
     oversample oversample (
         .clk(clk),
-        .sync_in(dpll_sync[1]),
+        .sync_in(dpll_sync[2:1]),
         .data_in(rx_data),
-        .data_out(rx_os)
+        .cd_in(rx_cd),
+        .data_out(rx_os),
+        .cd_out(rx_cd_filt)
     );
 
 endmodule

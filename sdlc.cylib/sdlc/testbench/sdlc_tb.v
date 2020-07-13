@@ -26,9 +26,11 @@ module sdlc_tb();
     always @(clk) sdlc_tx.sdlc_dp.dp.U1.cpu_clock <= ~clk;
     always @(clk) sdlc_tx.sdlc_dp.dp.U0.cpu_clock <= ~clk;
     always @(clk) sdlc_tx.tx_ctrl.dp.U0.cpu_clock <= ~clk;
+    always @(clk) sdlc_tx.oversample.dp.U0.cpu_clock <= ~clk;
     always @(clk) sdlc_rx.sdlc_dp.dp.U1.cpu_clock <= ~clk;
     always @(clk) sdlc_rx.sdlc_dp.dp.U0.cpu_clock <= ~clk;
     always @(clk) sdlc_rx.tx_ctrl.dp.U0.cpu_clock <= ~clk;
+    always @(clk) sdlc_rx.oversample.dp.U0.cpu_clock <= ~clk;
 
     initial begin
         /* Force init values for sim */
@@ -40,6 +42,13 @@ module sdlc_tb();
         sdlc_rx.dpll.dco.actl <= 1'b0;
         #1000;
         sdlc_rx.dpll.dco.actl <= 1'b1;
+        sdlc_tx.sdlc_dp.dp.U0.a0_write(8'h00);
+
+        /* Setup carrier detect */
+        sdlc_tx.oversample.dp.U0.d0_write(8'h08);
+        sdlc_tx.oversample.dp.U0.d1_write(8'h10);
+        sdlc_rx.oversample.dp.U0.d0_write(8'h08);
+        sdlc_rx.oversample.dp.U0.d1_write(8'h10);
 
         /* Write polynomial */
         sdlc_tx.sdlc_dp.dp.U1.d0_write(8'h08);

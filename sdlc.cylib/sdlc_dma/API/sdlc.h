@@ -2,6 +2,10 @@
 
 #define `$INSTANCE_NAME`_DPLL_CONTROL_REG \
     (*(reg8  *) `$INSTANCE_NAME`_B_SDLC_dpll_dco__CONTROL_AUX_CTL_REG)
+#define `$INSTANCE_NAME`_CD_THRESHOLD_REG \
+    (*(reg8  *) `$INSTANCE_NAME`_B_SDLC_oversample_dp_u0__D0_REG)
+#define `$INSTANCE_NAME`_CD_LIMIT_REG \
+    (*(reg8  *) `$INSTANCE_NAME`_B_SDLC_oversample_dp_u0__D1_REG)
 #define `$INSTANCE_NAME`_BIT_COUNT_REG \
     (*(reg8  *) `$INSTANCE_NAME`_B_SDLC_sdlc_dp_bit_counter__CONTROL_AUX_CTL_REG)
 #define `$INSTANCE_NAME`_ZERO_INS_COUNT_REG \
