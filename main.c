@@ -27,8 +27,19 @@ static uint8_t sdlc_tx_data[] __attribute__((aligned(4))) = {
 };
 
 static uint8_t sdlc_rx_data[8] __attribute__((aligned(4)));
+static uint8_t sdlc_bad_data[8] __attribute__((aligned(4)));
+static int rx_pkts, tx_pkts, rx_bytes;
 
 CY_ISR(sys_tick_handler) {
+    if (sdlc_rx_data[0] == 0x15) rx_pkts++;
+    else {
+        memcpy(sdlc_bad_data, sdlc_rx_data, 8);
+        rx_bytes = SDLC_GetRxBytes();
+    }
+    sdlc_rx_data[0] = 0;
+    tx_pkts++;
+    sdlc_tx_data[4] = tx_pkts & 0xff;
+    sdlc_tx_data[3] = (tx_pkts >> 8) * 0xff;
     SDLC_SendReceive(7, 7, sdlc_tx_data, sdlc_rx_data);
 }
 
@@ -50,11 +61,17 @@ int main(void) {
     for(;;) {
         if (i == 1000000) {
             LED_0_Write(blink);
-            print("Data: ");
+            print("Bytes: ");
+            print(print_num(rx_bytes));
+            print(", data: ");
             for (j = 0; j < 8; j++) {
-                print(print_hex(sdlc_rx_data[j]));
+                print(print_hex(sdlc_bad_data[j]));
                 print(", ");
             }
+            print("dropped pkts: ");
+            print(print_num(tx_pkts - rx_pkts));
+            print(" out of ");
+            print(print_num(tx_pkts));
             print("\n");
             blink = !blink;
             i = 0;

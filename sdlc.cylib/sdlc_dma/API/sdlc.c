@@ -11,7 +11,6 @@ void `$INSTANCE_NAME`_Setup(void) {
     `$INSTANCE_NAME`_CD_LIMIT_REG       = 0x10;
     `$INSTANCE_NAME`_BIT_COUNT_REG      = 0x20;
     `$INSTANCE_NAME`_ZERO_INS_COUNT_REG = 0x20;
-    `$INSTANCE_NAME`_CRC_AUX_CTL_REG    = 0x0808;
     `$INSTANCE_NAME`_CRC_POLY_REG       = 0x810;
     `$INSTANCE_NAME`_CRC_MATCH_REG      = 0xE2F0;
     `$INSTANCE_NAME`_STATE_CRC_REG      = 0x10;
@@ -40,19 +39,18 @@ void `$INSTANCE_NAME`_Setup(void) {
     CyDmaTdSetConfiguration(tx_td, 32, tx_td, TD_INC_SRC_ADR);
     CyDmaChSetInitialTd(tx_ch, tx_td);
 
-    CyDmaTdSetConfiguration(rx_td, 32, CY_DMA_DISABLE_TD, TD_INC_DST_ADR);
-    CyDmaTdSetAddress(rx_td,
-            LO16((uint32_t) `$INSTANCE_NAME`_RX_DATA_REG),
-            LO16((uint32_t) rx_buf));
-
-    CyDmaChEnable(tx_ch, 1u);
-    CyDmaChEnable(rx_ch, 1u);
+    CyDmaChEnable(tx_ch, 1);
 }
 
 void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, uint8 *rx_data) {
     /* Setup receiver for response */
     CyDmaClearPendingDrq(rx_ch);
+    CyDmaTdSetConfiguration(rx_td, 32, CY_DMA_DISABLE_TD, TD_INC_DST_ADR);
+    CyDmaTdSetAddress(rx_td,
+            LO16((uint32_t) `$INSTANCE_NAME`_RX_DATA_REG),
+            LO16((uint32_t) rx_buf));
     CyDmaChSetInitialTd(rx_ch, rx_td);
+    CyDmaChEnable(rx_ch, 0);
 
     /* Double buffer valid messages using RX checksum */
     CyDmaClearPendingDrq(rx_val_ch);
@@ -62,7 +60,7 @@ void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, ui
             LO16((uint32_t) rx_buf),
             LO16((uint32_t) rx_data));
     CyDmaChSetInitialTd(rx_val_ch, rx_val_td);
-    CyDmaChEnable(rx_val_ch, 1u);
+    CyDmaChEnable(rx_val_ch, 1);
 
     /* Send message */
     CyDmaClearPendingDrq(tx_ch);
@@ -81,4 +79,10 @@ void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, ui
     `$INSTANCE_NAME`_TX_PREAMBLE_REG = 0xFF;
     `$INSTANCE_NAME`_TX_PREAMBLE_REG = 0xFF;
     `$INSTANCE_NAME`_TX_PREAMBLE_REG = 0x7E;
+}
+
+uint16 `$INSTANCE_NAME`_GetRxBytes(void) {
+    uint16 rx_bytes;
+    CyDmaTdGetConfiguration(rx_td, &rx_bytes, NULL, NULL);
+    return 32 - rx_bytes;
 }

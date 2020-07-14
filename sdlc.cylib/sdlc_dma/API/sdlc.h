@@ -33,3 +33,4 @@
 
 void `$INSTANCE_NAME`_Setup(void);
 void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, uint8 *rx_data);
+uint16 `$INSTANCE_NAME`_GetRxBytes(void);
