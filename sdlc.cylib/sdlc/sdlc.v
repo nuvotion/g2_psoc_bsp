@@ -63,7 +63,7 @@ module dpll (
 
     /* -------- Phase detection --------------------------------------- */
 
-    reg dff1_q, dff2_q, dff3_q, dff4_q;
+    reg dff1_q, dff2_q, dff3_q;
     wire clk_en, clk_en90;
 
     cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
@@ -88,13 +88,13 @@ module dpll (
     always @(posedge clk_en90) begin
         dff1_q <= sync_in;
         dff2_q <= dff1_q;
-        dff4_q <= dff3_q;
     end
 
     /* Edge detection */
-    assign late =   (~dff2_q &  dff1_q &  dff4_q);
-    assign early =  (~dff2_q &  dff1_q & ~dff4_q) |
-                    ( dff2_q & ~dff1_q);
+    assign late =   (~dff2_q &  dff1_q &  dff3_q) |
+                    ( dff2_q & ~dff1_q &  dff3_q);
+    assign early =  (~dff2_q &  dff1_q & ~dff3_q) |
+                    ( dff2_q & ~dff1_q & ~dff3_q);
 
     assign cd_out = dff1_q & ~dff2_q;
 
