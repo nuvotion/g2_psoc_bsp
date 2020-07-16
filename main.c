@@ -14,9 +14,11 @@ static void usb_poll(void) {
 }
 
 void print(char *string) {
+    static char print_string[64];
     if (!usb_up) return;
+    strcpy(print_string, string);
     while (!USBFS_CDCIsReady()) {}
-    USBFS_PutData((uint8_t *)string, strlen(string));
+    USBFS_PutData((uint8_t *)print_string, strlen(string));
 }
 
 static uint8_t sdlc_tx_data[] __attribute__((aligned(4))) = {
@@ -31,15 +33,21 @@ static uint8_t sdlc_bad_data[8] __attribute__((aligned(4)));
 static int rx_pkts, tx_pkts, rx_bytes;
 
 CY_ISR(sys_tick_handler) {
-    if (sdlc_rx_data[0] == 0x15) rx_pkts++;
+    int rx_bytes_tmp;
+
+    rx_bytes_tmp = SDLC_GetRxBytes();
+
+    if (sdlc_rx_data[0] == 0x15 && rx_bytes_tmp == 8) rx_pkts++;
     else {
         memcpy(sdlc_bad_data, sdlc_rx_data, 8);
-        rx_bytes = SDLC_GetRxBytes();
+        rx_bytes = rx_bytes_tmp;
     }
+
     sdlc_rx_data[0] = 0;
     tx_pkts++;
     sdlc_tx_data[4] = tx_pkts & 0xff;
     sdlc_tx_data[3] = (tx_pkts >> 8) * 0xff;
+
     SDLC_SendReceive(7, 7, sdlc_tx_data, sdlc_rx_data);
 }
 
@@ -50,8 +58,8 @@ int main(void) {
 
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
     SDLC_Setup();
-    SYS_TICK_Start();
-    SYS_TICK_IRQ_StartEx(sys_tick_handler);
+    CySysTickStart();
+    CySysTickSetCallback(0, sys_tick_handler);
 
     LED_0_Write(1);
     LED_1_Write(1);

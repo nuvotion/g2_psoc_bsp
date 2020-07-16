@@ -28,45 +28,43 @@ void `$INSTANCE_NAME`_Setup(void) {
                 HI16(CYDEV_SRAM_BASE),
                 HI16(CYDEV_SRAM_BASE));
 
-    CyDmaClearPendingDrq(tx_ch);
-    CyDmaClearPendingDrq(rx_ch);
-    CyDmaClearPendingDrq(rx_val_ch);
-
     tx_td     = CyDmaTdAllocate();
     rx_td     = CyDmaTdAllocate();
     rx_val_td = CyDmaTdAllocate();
 
     CyDmaTdSetConfiguration(tx_td, 32, tx_td, TD_INC_SRC_ADR);
     CyDmaChSetInitialTd(tx_ch, tx_td);
-
-    CyDmaChEnable(tx_ch, 1);
 }
 
 void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, uint8 *rx_data) {
     /* Setup receiver for response */
-    CyDmaClearPendingDrq(rx_ch);
+    CyDmaChDisable(rx_ch);
     CyDmaTdSetConfiguration(rx_td, 32, CY_DMA_DISABLE_TD, TD_INC_DST_ADR);
     CyDmaTdSetAddress(rx_td,
             LO16((uint32_t) `$INSTANCE_NAME`_RX_DATA_REG),
             LO16((uint32_t) rx_buf));
+    CyDmaClearPendingDrq(rx_ch);
     CyDmaChSetInitialTd(rx_ch, rx_td);
     CyDmaChEnable(rx_ch, 0);
 
     /* Double buffer valid messages using RX checksum */
-    CyDmaClearPendingDrq(rx_val_ch);
+    CyDmaChDisable(rx_val_ch);
     CyDmaTdSetConfiguration(rx_val_td, rx_len, CY_DMA_DISABLE_TD,
             TD_INC_SRC_ADR | TD_INC_DST_ADR);
     CyDmaTdSetAddress(rx_val_td,
             LO16((uint32_t) rx_buf),
             LO16((uint32_t) rx_data));
+    CyDmaClearPendingDrq(rx_val_ch);
     CyDmaChSetInitialTd(rx_val_ch, rx_val_td);
     CyDmaChEnable(rx_val_ch, 1);
 
     /* Send message */
-    CyDmaClearPendingDrq(tx_ch);
+    CyDmaChDisable(tx_ch);
     CyDmaTdSetAddress(tx_td,
             LO16((uint32_t) tx_data),
             LO16((uint32_t) `$INSTANCE_NAME`_TX_DATA_REG));
+    CyDmaClearPendingDrq(tx_ch);
+    CyDmaChEnable(tx_ch, 1);
 
     /* Reset FIFOs and reset length */
     `$INSTANCE_NAME`_CRC_AUX_CTL_REG = 0x0B0B;
