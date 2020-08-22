@@ -17,9 +17,9 @@ module cy_psoc3_udb_clock_enable_v1_0_shim(
 
     cy_psoc3_udb_clock_enable_v1_0 #(.sync_mode(sync_mode))
     clk_enable (
-        clock_in_shim,
-        enable,
-        clock_out
+        .clock_in(clock_in_shim),
+        .enable(enable),
+        .clock_out(clock_out)
     );
 
 endmodule

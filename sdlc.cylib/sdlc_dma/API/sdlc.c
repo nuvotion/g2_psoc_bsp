@@ -32,17 +32,17 @@ void `$INSTANCE_NAME`_Setup(void) {
     rx_td     = CyDmaTdAllocate();
     rx_val_td = CyDmaTdAllocate();
 
-    CyDmaTdSetConfiguration(tx_td, 32, tx_td, TD_INC_SRC_ADR);
+    CyDmaTdSetConfiguration(tx_td, 32, tx_td, CY_DMA_TD_INC_SRC_ADR);
     CyDmaChSetInitialTd(tx_ch, tx_td);
 }
 
 void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, uint8 *rx_data) {
     /* Setup receiver for response */
     CyDmaChDisable(rx_ch);
-    CyDmaTdSetConfiguration(rx_td, 32, CY_DMA_DISABLE_TD, TD_INC_DST_ADR);
+    CyDmaTdSetConfiguration(rx_td, 32, CY_DMA_DISABLE_TD, CY_DMA_TD_INC_DST_ADR);
     CyDmaTdSetAddress(rx_td,
-            LO16((uint32_t) `$INSTANCE_NAME`_RX_DATA_REG),
-            LO16((uint32_t) rx_buf));
+            LO16((uint32) `$INSTANCE_NAME`_RX_DATA_REG),
+            LO16((uint32) rx_buf));
     CyDmaClearPendingDrq(rx_ch);
     CyDmaChSetInitialTd(rx_ch, rx_td);
     CyDmaChEnable(rx_ch, 0);
@@ -50,10 +50,10 @@ void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, ui
     /* Double buffer valid messages using RX checksum */
     CyDmaChDisable(rx_val_ch);
     CyDmaTdSetConfiguration(rx_val_td, rx_len, CY_DMA_DISABLE_TD,
-            TD_INC_SRC_ADR | TD_INC_DST_ADR);
+            CY_DMA_TD_INC_SRC_ADR | CY_DMA_TD_INC_DST_ADR);
     CyDmaTdSetAddress(rx_val_td,
-            LO16((uint32_t) rx_buf),
-            LO16((uint32_t) rx_data));
+            LO16((uint32) rx_buf),
+            LO16((uint32) rx_data));
     CyDmaClearPendingDrq(rx_val_ch);
     CyDmaChSetInitialTd(rx_val_ch, rx_val_td);
     CyDmaChEnable(rx_val_ch, 1);
@@ -61,8 +61,8 @@ void `$INSTANCE_NAME`_SendReceive(uint8 tx_len, uint8 rx_len, uint8 *tx_data, ui
     /* Send message */
     CyDmaChDisable(tx_ch);
     CyDmaTdSetAddress(tx_td,
-            LO16((uint32_t) tx_data),
-            LO16((uint32_t) `$INSTANCE_NAME`_TX_DATA_REG));
+            LO16((uint32) tx_data),
+            LO16((uint32) `$INSTANCE_NAME`_TX_DATA_REG));
     CyDmaClearPendingDrq(tx_ch);
     CyDmaChEnable(tx_ch, 1);
 
