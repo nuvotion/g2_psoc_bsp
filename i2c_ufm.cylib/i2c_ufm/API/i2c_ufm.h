@@ -14,8 +14,8 @@
 
 #define `$INSTANCE_NAME`_DIVIDER            ((BCLK__BUS_CLK__MHZ+15)/16)
 
-#define `$INSTANCE_NAME`_ISR_NUMBER         ((uint8) `$INSTANCE_NAME`_I2C_IRQ__INTC_NUMBER)
-#define `$INSTANCE_NAME`_ISR_PRIORITY       ((uint8) `$INSTANCE_NAME`_I2C_IRQ__INTC_PRIOR_NUM)
+#define `$INSTANCE_NAME`_ISR_NUMBER         ((uint8) `$INSTANCE_NAME`_IRQ__INTC_NUMBER)
+#define `$INSTANCE_NAME`_ISR_PRIORITY       ((uint8) `$INSTANCE_NAME`_IRQ__INTC_PRIOR_NUM)
 
 #define `$INSTANCE_NAME`_ACT_PWR_EN         ((uint8) `$INSTANCE_NAME`_I2C_FF__PM_ACT_MSK)
 #define `$INSTANCE_NAME`_STBY_PWR_EN        ((uint8) `$INSTANCE_NAME`_I2C_FF__PM_STBY_MSK)
@@ -30,5 +30,7 @@
 #define `$INSTANCE_NAME`_CLKDIV1_REG        (*(reg8 *) `$INSTANCE_NAME`_I2C_FF__CLK_DIV1)
 #define `$INSTANCE_NAME`_CLKDIV2_REG        (*(reg8 *) `$INSTANCE_NAME`_I2C_FF__CLK_DIV2)
 
-void `$INSTANCE_NAME`_Setup(void);
-void `$INSTANCE_NAME`_Write(uint8 addr, uint8 len, uint8 *wr_data);
+void `$INSTANCE_NAME`_SetupDMA(uint8 max_len);
+void `$INSTANCE_NAME`_SetupIRQ(void);
+void `$INSTANCE_NAME`_WriteDMA(uint8 len, uint8 *wr_data);
+void `$INSTANCE_NAME`_WriteIRQ(uint8 addr, uint8 len, uint8 *wr_data);

@@ -21,14 +21,14 @@ void print(char *string) {
     USBFS_PutData((uint8_t *)print_string, strlen(string));
 }
 
-static uint8_t wr_data[6] = { 0x04, 0x00, 0x56, 0x78, 0x9A, 0xBC };
-//static uint8_t wr_data[6] = { 0 };
+static uint8_t wr_data[7] = { 0x10, 0x04, 0x00, 0x56, 0x78, 0x9A, 0xBC };
 
 CY_ISR(sys_tick_handler) {
     /* Prepare write buffer */
-    I2C_UFM_Write(0x10, 6, wr_data);
+    I2C_UFM_WriteDMA(7, wr_data);
+    //I2C_UFM_WriteIRQ(0x10, 6, wr_data + 1);
 
-    wr_data[4]++;
+    wr_data[5]++;
 }
 
 int main(void) {
@@ -42,7 +42,8 @@ int main(void) {
     CySysTickClear();
     CySysTickSetCallback(0, sys_tick_handler);
     
-    I2C_UFM_Setup();
+    I2C_UFM_SetupDMA(7);
+    //I2C_UFM_SetupIRQ();
     LOCAL_OUTPUT_Write(0x7);
 
     CyGlobalIntEnable;
