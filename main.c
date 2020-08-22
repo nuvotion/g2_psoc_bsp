@@ -21,66 +21,36 @@ void print(char *string) {
     USBFS_PutData((uint8_t *)print_string, strlen(string));
 }
 
-static uint8_t sdlc_tx_data[] __attribute__((aligned(4))) = {
-    0x15, 0x00, 0x00, 0x03, 0x04, 0x05, 0x06, 0x07,
-    0x08, 0x09, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15,
-    0x16, 0x17, 0x18, 0x19, 0x20, 0x21, 0x22, 0x23,
-    0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x30, 0x31
-};
-
-static uint8_t sdlc_rx_data[8] __attribute__((aligned(4)));
-static uint8_t sdlc_bad_data[8] __attribute__((aligned(4)));
-static int rx_pkts, tx_pkts, rx_bytes;
+static uint8_t wr_data[6] = { 0x04, 0x00, 0x56, 0x78, 0x9A, 0xBC };
+//static uint8_t wr_data[6] = { 0 };
 
 CY_ISR(sys_tick_handler) {
-    int rx_bytes_tmp;
+    /* Prepare write buffer */
+    I2C_UFM_Write(0x10, 6, wr_data);
 
-    rx_bytes_tmp = SDLC_GetRxBytes();
-
-    if (sdlc_rx_data[0] == 0x15 && rx_bytes_tmp == 8) rx_pkts++;
-    else {
-        memcpy(sdlc_bad_data, sdlc_rx_data, 8);
-        rx_bytes = rx_bytes_tmp;
-    }
-
-    sdlc_rx_data[0] = 0;
-    tx_pkts++;
-    sdlc_tx_data[4] = tx_pkts & 0xff;
-    sdlc_tx_data[3] = (tx_pkts >> 8) * 0xff;
-
-    SDLC_SendReceive(7, 7, sdlc_tx_data, sdlc_rx_data);
+    wr_data[4]++;
 }
 
 int main(void) {
     int i = 0;
     int blink = 0;
-    int j;
 
     USBFS_Start(0, USBFS_DWR_VDDD_OPERATION);
-    SDLC_Setup();
-    CySysTickStart();
-    CySysTickSetCallback(0, sys_tick_handler);
 
-    LED_0_Write(1);
-    LED_1_Write(1);
+    CySysTickStart();
+    CySysTickSetReload(BCLK__BUS_CLK__HZ/6000);
+    CySysTickClear();
+    CySysTickSetCallback(0, sys_tick_handler);
+    
+    I2C_UFM_Setup();
+    LOCAL_OUTPUT_Write(0x7);
 
     CyGlobalIntEnable;
 
     for(;;) {
         if (i == 1000000) {
-            LED_0_Write(blink);
-            print("Bytes: ");
-            print(print_num(rx_bytes));
-            print(", data: ");
-            for (j = 0; j < 8; j++) {
-                print(print_hex(sdlc_bad_data[j]));
-                print(", ");
-            }
-            print("dropped pkts: ");
-            print(print_num(tx_pkts - rx_pkts));
-            print(" out of ");
-            print(print_num(tx_pkts));
-            print("\n");
+            LOCAL_OUTPUT_Write(blink ? 0x5 : 0x07);
+            print("Loop running\n");
             blink = !blink;
             i = 0;
         }
