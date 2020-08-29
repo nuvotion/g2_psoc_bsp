@@ -5,6 +5,7 @@ static volatile uint8 *isr_buf;
 static volatile uint8  isr_buf_size;
 static uint8 dma_ch;
 static uint8 dma_td_first;
+static uint8 setup_done;
 
 CY_ISR(`$INSTANCE_NAME`_ISR) {
     if (isr_buf_idx < isr_buf_size) {
@@ -29,14 +30,13 @@ static void `$INSTANCE_NAME`_Config(void) {
     `$INSTANCE_NAME`_ACT_PWRMGR_REG  |= `$INSTANCE_NAME`_ACT_PWR_EN;
     `$INSTANCE_NAME`_STBY_PWRMGR_REG |= `$INSTANCE_NAME`_STBY_PWR_EN;
     CyExitCriticalSection(intState);
-
 }
 
 void `$INSTANCE_NAME`_SetupDMA(uint8 max_len) {
     uint8 i, curr_td, next_td;
     static uint8 dma_transmit = `$INSTANCE_NAME`_CSR_TRANSMIT;
 
-    if (max_len == 0) return;
+    if (setup_done) return;
 
     `$INSTANCE_NAME`_Config();
     CyIntDisable(`$INSTANCE_NAME`_ISR_NUMBER);
@@ -63,19 +63,27 @@ void `$INSTANCE_NAME`_SetupDMA(uint8 max_len) {
     CyDmaTdSetAddress(curr_td,
             LO16((uint32) &dma_transmit),
             LO16((uint32) &`$INSTANCE_NAME`_CSR_REG));
+
+    setup_done = 1;
 }
 
 void `$INSTANCE_NAME`_SetupIRQ(void) {
+    if (setup_done) return;
+
     `$INSTANCE_NAME`_Config();
 
     CyIntSetPriority(`$INSTANCE_NAME`_ISR_NUMBER, `$INSTANCE_NAME`_ISR_PRIORITY);
     CyIntSetVector(`$INSTANCE_NAME`_ISR_NUMBER, `$INSTANCE_NAME`_ISR);
     CyIntEnable(`$INSTANCE_NAME`_ISR_NUMBER);
+
+    setup_done = 1;
 }
 
 void `$INSTANCE_NAME`_WriteDMA(uint8 len, uint8 *wr_data) {
     uint8 i, curr_td, next_td;
     static uint8 dma_stop = `$INSTANCE_NAME`_MCSR_STOP_GEN;
+
+    if (!setup_done) return;
 
     CyDmaChDisable(dma_ch);
 
@@ -105,6 +113,8 @@ void `$INSTANCE_NAME`_WriteDMA(uint8 len, uint8 *wr_data) {
 }
 
 void `$INSTANCE_NAME`_WriteIRQ(uint8 addr, uint8 len, uint8 *wr_data) {
+    if (!setup_done) return;
+
     isr_buf_idx  = 0;
     isr_buf_size = len;
     isr_buf      = wr_data;
