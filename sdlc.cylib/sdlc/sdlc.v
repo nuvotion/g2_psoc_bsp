@@ -326,13 +326,13 @@ module sdlc_dp (
         output wire         tx_drq,
         input  wire         rx_cd,
         input  wire         rx_data,
-        output wire         rx_valid,
+        output reg          rx_valid,
         output wire         rx_drq,
         output wire   [7:0] dbg);
 
     parameter sim = `FALSE;
 
-    wire        dp_clk, out_clk;
+    wire        dp_clk, out_clk, rx_valid_clk;
     reg         dp_clk_en;
     wire        si, ci, f0_load;
     wire  [1:0] ce1, cmsb, so, f0_bus_stat, f1_bus_stat;
@@ -343,6 +343,8 @@ module sdlc_dp (
     wire        zero_ins;
     wire        pkt_sync;
     reg   [1:0] dp_cs_addr;
+    wire        rx_valid_en;
+    reg         rx_valid_p;
 
     assign dbg[0] = clk; 
     assign dbg[1] = tx_out; 
@@ -365,14 +367,21 @@ module sdlc_dp (
 
     assign tx_zero_ins  = zero_ins;
     assign tx_drq       = sdlc_dir & f1_bus_stat[1] & bit_tc;
-    assign rx_valid     = check_crc & ~sdlc_dir & ce1[1] & clken[2] & rx_cd;
+    assign rx_valid_en  = clken[2] & check_crc;
     assign rx_drq       = f0_bus_stat[1] & clken[3];
+
+    cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
+    clk_sync_2 (
+        .clock_in(clk),
+        .enable(clken[2]),
+        .clock_out(out_clk)
+    );
 
     cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
     clk_sync_1 (
         .clock_in(clk),
-        .enable(clken[2]),
-        .clock_out(out_clk)
+        .enable(rx_valid_en),
+        .clock_out(rx_valid_clk)
     );
 
     cy_psoc3_udb_clock_enable_v1_0_shim #(.sync_mode(`TRUE), .sim(sim))
@@ -381,6 +390,11 @@ module sdlc_dp (
         .enable(dp_clk_en),
         .clock_out(dp_clk)
     );
+
+    always @(posedge rx_valid_clk) begin
+        rx_valid_p  <= ce1[1] & rx_cd & ~pkt_sync;
+        rx_valid    <= rx_valid_p & pkt_sync & ~sdlc_dir;
+    end
 
     always @(posedge out_clk) begin
         if (tx_state_sync) begin
@@ -500,7 +514,7 @@ module sdlc_dp (
         dp_cs_addr[1] <=  clken[1];
         dp_cs_addr[0] <= (tx_start & clken[0]) | (tx_start & clken[1]) |
                          (~tx_state_sync & ~tx_state_crc & bit_tc & clken[0]) | 
-                         (~sdlc_dir & pkt_sync);
+                         (~sdlc_dir & pkt_sync) | (~sdlc_dir & ~rx_cd);
     end
 
     always @(posedge clk) dp_din <= sdlc_dir ? so_lsb : rx_data;
