@@ -7,7 +7,7 @@ static uint8 rx_buf[32] __attribute__((aligned(4)));
 
 void `$INSTANCE_NAME`_Setup(void) {
     `$INSTANCE_NAME`_DPLL_CONTROL_REG   = 0x20;
-    `$INSTANCE_NAME`_CD_THRESHOLD_REG   = 0x08;
+    `$INSTANCE_NAME`_CD_THRESHOLD_REG   = 0x0C;
     `$INSTANCE_NAME`_CD_LIMIT_REG       = 0x10;
     `$INSTANCE_NAME`_BIT_COUNT_REG      = 0x20;
     `$INSTANCE_NAME`_ZERO_INS_COUNT_REG = 0x20;

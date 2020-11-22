@@ -346,6 +346,7 @@ module sdlc_dp (
     wire        rx_valid_en;
     reg         rx_valid_p;
 
+    /*
     assign dbg[0] = clk; 
     assign dbg[1] = tx_out; 
     assign dbg[2] = zero_ins; 
@@ -354,16 +355,15 @@ module sdlc_dp (
     assign dbg[5] = dp_cs_addr[1]; 
     assign dbg[6] = f1_bus_stat[1]; 
     assign dbg[7] = tx_drq; 
-    /*
+    */
     assign dbg[0] = clken[2]; 
     assign dbg[1] = dp_din; 
     assign dbg[2] = pkt_sync; 
     assign dbg[3] = f0_bus_stat[1]; 
     assign dbg[4] = rx_cd; 
-    assign dbg[5] = rx_drq;
-    assign dbg[6] = f0_load; 
+    assign dbg[5] = rx_valid_p;
+    assign dbg[6] = rx_valid_en; 
     assign dbg[7] = 1'b0; 
-    */
 
     assign tx_zero_ins  = zero_ins;
     assign tx_drq       = sdlc_dir & f1_bus_stat[1] & bit_tc;
@@ -623,8 +623,8 @@ module sdlc (
 
     wire  [7:0] dbg_int;
 
-    assign dbg = {dbg_int[7:1], tx_clk};
-    //assign dbg = {rx_clk, dbg_int[6:0]};
+    //assign dbg = {dbg_int[7:1], tx_clk};
+    assign dbg = {rx_clk, dbg_int[6:0]};
 
     assign rx_clk_gated = rx_clk & ~sdlc_dir;
     assign dpll_sync    = {dpll_sync_out_d, dpll_sync_out};
